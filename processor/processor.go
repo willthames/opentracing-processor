@@ -27,9 +27,9 @@ type App struct {
 	metricsPort  int
 	server       *http.Server
 	collectorURL string
-	forwarder    *Forwarder
 	logLevel     string
-	outputLines  []string
+	Forwarder    *Forwarder
+	OutputLines  []string
 }
 
 func (a *App) receiveSpan(span *span.Span) {
@@ -145,8 +145,8 @@ func (a *App) start() error {
 		Handler: mux,
 	}
 	go a.server.ListenAndServe()
-	if len(a.outputLines) > 0 {
-		for _, line := range a.outputLines {
+	if len(a.OutputLines) > 0 {
+		for _, line := range a.OutputLines {
 			fmt.Println(line)
 		}
 	}
@@ -173,15 +173,15 @@ func (a *App) Serve() {
 	logrus.SetFormatter(&logrus.TextFormatter{FullTimestamp: true})
 	if a.collectorURL != "" {
 		logrus.WithField("collectorURL", a.collectorURL).Debug("Creating trace forwarder")
-		a.forwarder, err = NewForwarder(a.collectorURL)
+		a.Forwarder, err = NewForwarder(a.collectorURL)
 		if err != nil {
 			fmt.Printf("%v", err)
 			os.Exit(1)
 		}
-		a.forwarder.Start()
-		defer a.forwarder.Stop()
+		a.Forwarder.Start()
+		defer a.Forwarder.Stop()
 	} else {
-		a.forwarder = nil
+		a.Forwarder = nil
 	}
 	err = a.start()
 	defer a.stop()

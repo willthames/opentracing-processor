@@ -16,6 +16,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+// Payload is the content to forward to the collector
 type Payload struct {
 	ContentType string
 	Body        []byte
