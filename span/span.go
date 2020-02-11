@@ -276,3 +276,10 @@ func DecodeThrift(data []byte) ([]*Span, error) {
 
 	return spans, nil
 }
+
+// AddTag adds a binary annotation with a key/value pair
+// to the span
+func (s *Span) AddTag(key string, value interface{}) {
+	tag := BinaryAnnotation{Key: key, Value: value}
+	s.BinaryAnnotations = append(s.BinaryAnnotations, tag)
+}
