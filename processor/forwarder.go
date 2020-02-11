@@ -16,7 +16,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-type payload struct {
+type Payload struct {
 	ContentType string
 	Body        []byte
 }
@@ -27,7 +27,7 @@ type Forwarder struct {
 	BufSize        int
 	MaxConcurrency int
 
-	payloads chan payload
+	payloads chan Payload
 	stopped  bool
 	wg       sync.WaitGroup
 }
@@ -39,7 +39,7 @@ func (f *Forwarder) Start() error {
 	if f.BufSize == 0 {
 		f.BufSize = 4096
 	}
-	f.payloads = make(chan payload, f.BufSize)
+	f.payloads = make(chan Payload, f.BufSize)
 	for i := 0; i < f.MaxConcurrency; i++ {
 		f.wg.Add(1)
 		go f.runWorker()
@@ -83,7 +83,7 @@ func (f *Forwarder) runWorker() {
 	f.wg.Done()
 }
 
-func (f *Forwarder) Send(p payload) error {
+func (f *Forwarder) Send(p Payload) error {
 	if f.stopped {
 		return errors.New("sink stopped")
 	}
