@@ -30,10 +30,12 @@ type App struct {
 	logLevel     string
 	Forwarder    *Forwarder
 	OutputLines  []string
+	Receiver     SpanReceiver
 }
 
-func (a *App) receiveSpan(span *span.Span) {
-	panic("receiveSpan must be implemented by consuming types")
+// SpanReceiver is an interface that accepts spans
+type SpanReceiver interface {
+	receiveSpan(span *span.Span)
 }
 
 // BaseCLI adds standard command line flags common to all
@@ -103,7 +105,7 @@ func (a *App) handleSpans(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusAccepted)
 	for _, span := range spans {
-		a.receiveSpan(span)
+		a.Receiver.receiveSpan(span)
 	}
 }
 
