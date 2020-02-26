@@ -75,6 +75,10 @@ func (s Span) String() string {
 	return fmt.Sprintf("%#v", s)
 }
 
+func (a Annotation) String() string {
+	return fmt.Sprintf("Annotation({Timestamp: %v Value: %s Host: %#v})", time.Unix(a.Timestamp/1E9, a.Timestamp%1E9).Format(time.RFC3339Nano), a.Value, a.Host)
+}
+
 func (ba BinaryAnnotation) String() string {
 	switch ba.AnnotationType {
 	case AnnotationType(zipkincore.AnnotationType_STRING):
