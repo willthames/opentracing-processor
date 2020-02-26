@@ -35,7 +35,7 @@ type App struct {
 
 // SpanReceiver is an interface that accepts spans
 type SpanReceiver interface {
-	receiveSpan(span *span.Span)
+	ReceiveSpan(span *span.Span)
 }
 
 // BaseCLI adds standard command line flags common to all
@@ -105,7 +105,7 @@ func (a *App) handleSpans(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusAccepted)
 	for _, span := range spans {
-		a.Receiver.receiveSpan(span)
+		a.Receiver.ReceiveSpan(span)
 	}
 }
 
